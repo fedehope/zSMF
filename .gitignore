@@ -1,6 +1,7 @@
 .DS_Store
 .token
 .ipynb_checkpoints
+.idea/
 data/
 provabgs/
 grids/
