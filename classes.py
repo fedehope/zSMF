@@ -84,7 +84,7 @@ class BGS(Data):
         super().__init__(file)
 
         self.f_area = (173.641 / (4. * np.pi * (180 / np.pi) ** 2))
-
+        self.is_bgs_bright = is_bgs_bright
         if is_bgs_bright:
             self.is_bgs = 'is_bgs_bright'
         else:
@@ -133,9 +133,7 @@ class Plotter(BGS, EmceeRun):
     def __init__(self, bgs, emcee_run):
         BGS.__init__(self, bgs.file)
         EmceeRun.__init__(self, emcee_run.file_emcee_obj)
-
         self.z_lin = np.linspace(0, 0.65, 100)
-        # self.x_lin = np.linspace()
 
     def plot_selected_data(self, zmin, zmax):
         z, x, x_median, w_spec, vmax = self.select_galaxies(zmin, zmax)
@@ -187,6 +185,34 @@ class Plotter(BGS, EmceeRun):
     def plot_emcee_corner(self, flat_samples, labels):
         fig = corner.corner(flat_samples, labels=labels, quantiles=(0.16, 0.50, 0.84), show_titles=True);
         plt.show()
+
+    @staticmethod
+    def plot_vmax_hist(h, b, _h, _b):
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.step(b[:-1], h, where='pre')
+        ax.step(_b[:-1], _h, where='pre', color='k', linestyle='--')
+        ax.set_yscale('log')
+        ax.set_ylim(1e-5, 4e-2)
+        ax.set_xlim(7, 13)
+
+        ax.set_xlabel(r'$\log M_*$', fontsize=15)
+        ax.set_ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+        return fig, ax
+
+    @staticmethod
+    def plot_zschechter(x, z0, norm, best_params):
+        # fig, ax = plt.subplots(figsize=(8, 6))
+        a0, a1, a2, a3 = best_params
+        zschechter = ZSchechterModel.phi(x, z0, a0, a1, a2, a3)
+        plt.plot(x, norm * zschechter, linestyle='--')
+
+        plt.yscale('log')
+        plt.ylim(1e-5, 4e-2)
+        plt.xlim(7, 13)
+
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+        # return fig, ax
 
 
 class NoZSchechterModel(BGS):
@@ -284,4 +310,24 @@ class ZSchechterModel(BGS):
 
     def normalisation(self, best_params):
         a0, a1, a2, a3 = best_params
-        return np.sum(self.w_spec / (self.integral_phi(a0, a1, a2, a3, z0=True) * self.vmax))
+        v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        return np.sum(self.w_spec / (self.integral_phi(a0, a1, a2, a3, z0=True) * (v_zmax - v_zmin)))
+
+
+class VmaxDensity(BGS):
+    def __int__(self, bgs_obj):
+        BGS.__init__(bgs_obj.file, bgs_obj.is_bgs_bright)
+
+    def histogram_norm(self, zmin, zmax):
+        z, x, x_median, w_spec, vmax = self.select_galaxies(zmin, zmax)
+        weights = (w_spec / vmax)
+        hist, bin_edges = np.histogram(x_median, bins=40, range=(6., 13.), weights=weights)
+
+        v_zmin = Planck13.comoving_volume(zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmax = Planck13.comoving_volume(zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+
+        mask = (self.z > zmin) & (self.z < zmax)
+        _w = self.w_spec / self.vmax.clip(v_zmin, v_zmax)
+        _h, _b = np.histogram(self.x_median[mask], bins=40, range=(6., 13.), weights=_w[mask])
+        return hist, bin_edges, _h, _b
