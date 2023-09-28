@@ -310,9 +310,14 @@ class ZSchechterModel(BGS):
 
     def normalisation(self, best_params):
         a0, a1, a2, a3 = best_params
-        v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
-        v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
-        return np.sum(self.w_spec / (self.integral_phi(a0, a1, a2, a3, z0=True) * (v_zmax - v_zmin)))
+        # v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        # v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        m_max = 13.
+        m_min = 6.
+        nbin = 40
+        bin_size = (m_max - m_min) / nbin
+        I = integrate.quad(ZSchechterModel.phi, self.mlim.min(), 13., args=(self.z0, a0, a1, a2, a3))[0]
+        return np.sum((self.w_spec * bin_size) / (self.vmax * I))
 
 
 class VmaxDensity(BGS):
