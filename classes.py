@@ -333,6 +333,6 @@ class VmaxDensity(BGS):
         v_zmax = Planck13.comoving_volume(zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
 
         mask = (self.z > zmin) & (self.z < zmax)
-        _w = self.w_spec / self.vmax.clip(v_zmin, v_zmax)
+        _w = self.w_spec / (self.vmax.clip(v_zmin, v_zmax) - v_zmin)
         _h, _b = np.histogram(self.x_median[mask], bins=40, range=(6., 13.), weights=_w[mask])
         return hist, bin_edges, _h, _b
