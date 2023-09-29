@@ -187,10 +187,10 @@ class Plotter(BGS, EmceeRun):
         plt.show()
 
     @staticmethod
-    def plot_vmax_hist(h, b, _h, _b):
+    def plot_vmax_hist(h, b, _h, _b, **plot_params):
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax.step(b[:-1], h, where='pre')
-        ax.step(_b[:-1], _h, where='pre', color='k', linestyle='--')
+        ax.step(b[:-1], h, where='pre', linewidth=0.8, **plot_params)
+        ax.step(_b[:-1], _h, where='pre', color='k', linestyle='--', linewidth=0.8)
         ax.set_yscale('log')
         ax.set_ylim(1e-5, 4e-2)
         ax.set_xlim(7, 13)
@@ -200,11 +200,11 @@ class Plotter(BGS, EmceeRun):
         return fig, ax
 
     @staticmethod
-    def plot_zschechter(x, z0, norm, best_params):
+    def plot_zschechter(x, z0, norm, best_params, **plot_params):
         # fig, ax = plt.subplots(figsize=(8, 6))
         a0, a1, a2, a3 = best_params
         zschechter = ZSchechterModel.phi(x, z0, a0, a1, a2, a3)
-        plt.plot(x, norm * zschechter, linestyle='--')
+        plt.plot(x, norm * zschechter, **plot_params)
 
         plt.yscale('log')
         plt.ylim(1e-5, 4e-2)
