@@ -64,8 +64,8 @@ class Plotter(BGS, EmceeRun):
 
     @staticmethod
     def plot_vmax_hist(h, b, _h, _b, **plot_params):
-        plt.step(b[:-1], h, where='pre', linewidth=0.8, **plot_params)
-        plt.step(_b[:-1], _h, where='pre', color='k', linestyle='--', linewidth=0.8)
+        plt.step(b[:-1], h, where='post', linewidth=0.8, **plot_params)
+        plt.step(_b[:-1], _h, where='post', color='k', linestyle='--', linewidth=0.8)
         plt.yscale('log')
         plt.ylim(1e-5, 4e-2)
         plt.xlim(7, 13)
