@@ -2,6 +2,7 @@ import numpy as np
 from scipy import integrate
 
 from BGS import BGS
+from astropy.cosmology import Planck13
 
 
 class ZSchechterModel(BGS):
@@ -59,13 +60,38 @@ class ZSchechterModel(BGS):
         l = self.log_likelihood(a0, a1, a2, a3)
         return self.log_prior(theta) + np.sum(l)
 
-    def normalisation(self, best_params):
+    def normalisation2(self, best_params):
         a0, a1, a2, a3 = best_params
-        # v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
-        # v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
         m_max = 13.
         m_min = 6.
         nbin = 40
         bin_size = (m_max - m_min) / nbin
-        I = integrate.quad(ZSchechterModel.phi, self.mlim.min(), 13., args=(self.z0, a0, a1, a2, a3))[0]
+        I = [integrate.quad(ZSchechterModel.phi, self.mlim[i], 13., args=(self.z0, a0, a1, a2, a3))[0] for i in
+             range(self.mlim.shape[0])]
         return np.sum((self.w_spec * bin_size) / (self.vmax * I))
+
+    def normalisation(self, best_params):
+        a0, a1, a2, a3 = best_params
+        v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        m_max = 13.
+        m_min = 6.
+        nbin = 40
+        bin_size = (m_max - m_min) / nbin
+        I = [integrate.quad(ZSchechterModel.phi, self.mlim[i], 13., args=(self.z0, a0, a1, a2, a3))[0] for i in
+             range(self.mlim.shape[0])]
+        return 1 / (v_zmax - v_zmin) * np.sum((self.w_spec * bin_size) / np.array(I))
+
+    def normalisation3(self, best_params):
+        a0, a1, a2, a3 = best_params
+        v_zmin = Planck13.comoving_volume(self.zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        v_zmax = Planck13.comoving_volume(self.zmax).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
+        m_max = 13.
+        m_min = 6.
+        nbin = 40
+        bin_size = (m_max - m_min) / nbin
+        I = [integrate.dblquad(ZSchechterModel.phi, self.zmin, self.zmax, self.mlim[i], 13., args=(a0, a1, a2, a3))[0] for i in
+             range(self.mlim.shape[0])]
+        return 1 / (v_zmax - v_zmin) * np.sum((self.w_spec) / np.array(I))

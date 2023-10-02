@@ -83,5 +83,5 @@ class Plotter(BGS, EmceeRun):
         plt.ylim(1e-5, 4e-2)
         plt.xlim(7, 13)
 
-        plt.xlabel(r'$\log M_*$')
-        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]')
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
