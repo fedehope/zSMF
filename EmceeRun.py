@@ -15,7 +15,7 @@ class EmceeRun(FileEmcee):
         self.reader = emcee.backends.HDFBackend(self.emcee_file)
         self.samples = self.reader.get_chain()
 
-        self.labels4 = [r'$a_{0}$', r'$a_{1}$', r'$a_{3}$', r'$a_{3}$']
+        self.labels4 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$a_{3}$']
         self.labels2 = [r'$\log(M_{*})$', r'$\alpha_{1}$']
 
     def set_best_params(self, discard):

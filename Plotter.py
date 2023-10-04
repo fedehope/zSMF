@@ -85,3 +85,16 @@ class Plotter(BGS, EmceeRun):
 
         plt.xlabel(r'$\log M_*$', fontsize=15)
         plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+
+    @staticmethod
+    def plot_zschechter_error(self, x, z0, flat_samples, norm, **plot_params):
+        a0, a1, a2, a3 = best_params
+        zschechter = ZSchechterModel.phi(x, z0, a0, a1, a2, a3)
+        plt.plot(x, norm * zschechter, **plot_params)
+
+        plt.yscale('log')
+        plt.ylim(1e-5, 4e-2)
+        plt.xlim(7, 13)
+
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
