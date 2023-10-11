@@ -8,10 +8,13 @@ from ZSchechterModel import ZSchechterModel
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+
 class Plotter(BGS, EmceeRun):
     def __init__(self, bgs, emcee_run):
         BGS.__init__(self, bgs.file)
-        EmceeRun.__init__(self, emcee_run.file_emcee_obj)
+        self.samples = emcee_run.samples
+        self.labels4 = emcee_run.labels4
+        self.flat_samples = None
         self.z_lin = np.linspace(0, 0.65, 100)
 
     def plot_selected_data(self, zmin, zmax):
@@ -28,37 +31,19 @@ class Plotter(BGS, EmceeRun):
         plt.ylim(6., 13.2)
 
     def plot_emcee_samples(self):
+        ndim = len(self.labels4)
 
-        if self.z_dep:
-            ndim = 4
-            # labels = [r'$a_{0}$', r'$a_{1}$', r'$a_{3}$', r'$a_{3}$']
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels4[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
 
-            # TODO fix the repetition
-            fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
-
-            for i in range(ndim):
-                ax = axes[i]
-                ax.plot(self.samples[:, :, i], "k", alpha=0.3)
-                ax.set_xlim(0, len(self.samples))
-                ax.set_ylabel(self.labels4[i])
-                ax.yaxis.set_label_coords(-0.1, 0.5)
-                axes[-1].set_xlabel("step number")
-        else:
-            ndim = 2
-            # labels = [r'$\log(M_{*})$', r'$\alpha_{1}$']
-
-            fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
-
-            for i in range(ndim):
-                ax = axes[i]
-                ax.plot(self.samples[:, :, i], "k", alpha=0.3)
-                ax.set_xlim(0, len(self.samples))
-                ax.set_ylabel(self.labels2[i])
-                ax.yaxis.set_label_coords(-0.1, 0.5)
-                axes[-1].set_xlabel("step number")
-
-    # TODO maybe you can use self.flat_samples and self.labels
-    def plot_emcee_corner(self, flat_samples, labels):
+    @staticmethod
+    def plot_emcee_corner(flat_samples, labels):
         fig = corner.corner(flat_samples, labels=labels, quantiles=(0.16, 0.50, 0.84), show_titles=True);
         plt.show()
 
@@ -87,9 +72,9 @@ class Plotter(BGS, EmceeRun):
         plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
 
     @staticmethod
-    #TODO to finish it
+    # TODO to finish it
     def plot_zschechter_error(z0, flat_samples, **plot_params):
-        x = np.linspace(6,13,100)
+        x = np.linspace(6, 13, 100)
         inds = np.random.randint(len(flat_samples), size=100)
         for ind in inds:
             a0, a1, a2, a3 = flat_samples[ind]
