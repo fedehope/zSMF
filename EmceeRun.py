@@ -1,15 +1,15 @@
 import emcee
 import numpy as np
 from FileEmcee import FileEmcee
+from Fileh5 import Fileh5
 
 
-class EmceeRun(FileEmcee):
+class EmceeRun(Fileh5):
     def __init__(self, file_emcee_obj):
-        super().__init__(file_emcee_obj.z_dep, file_emcee_obj.bin_test, file_emcee_obj.info_file)
+        super().__init__(file_emcee_obj.folder, file_emcee_obj.info_file)
         self.best_params = None
         self.flat_samples = None
         self.file_emcee_obj = file_emcee_obj
-
         self.emcee_file = self.get_file()
 
         self.reader = emcee.backends.HDFBackend(self.emcee_file)
