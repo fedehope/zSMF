@@ -2,6 +2,7 @@ from Data import Data
 import numpy as np
 from astropy.cosmology import Planck13
 
+
 class BGS(Data):
     def __init__(self, file, is_bgs_bright=True):
         super().__init__(file)
@@ -29,7 +30,7 @@ class BGS(Data):
         self.c = 8.53522654
 
     def select_galaxies(self, zmin, zmax):
-        '''Return z, x, x_median, w_spec, vmax for galaxies between (zmin,zmax)'''
+        """Return z, x, x_median, w_spec, vmax for galaxies between (zmin,zmax)"""
         mask_zlim = (self.z > zmin) & (self.z < zmax) & (self.x_median > self.mass_completeness_limit(self.z))
 
         v_zmin = Planck13.comoving_volume(zmin).value * Planck13.h ** 3 * self.f_area  # (Mpc/h)^3
