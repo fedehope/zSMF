@@ -26,3 +26,19 @@ class EmceeRun(Fileh5):
 
     def get_best_params(self):
         return self.best_params
+
+    @staticmethod
+    def run_comparison(discard=150):
+        emcee_file_02 = Fileh5(folder='emcee_runs', info_file='0.0_0.2')
+        emcee_file_03 = Fileh5(folder='emcee_runs', info_file='0.0_0.3')
+        emcee_file_04 = Fileh5(folder='emcee_runs', info_file='0.0_0.4')
+
+        emcee_run_02 = EmceeRun(emcee_file_02)
+        emcee_run_03 = EmceeRun(emcee_file_03)
+        emcee_run_04 = EmceeRun(emcee_file_04)
+
+        emcee_run_02.set_best_params(discard=discard)
+        emcee_run_03.set_best_params(discard=discard)
+        emcee_run_04.set_best_params(discard=discard)
+
+        return np.array([emcee_run_02, emcee_run_03, emcee_run_04])
