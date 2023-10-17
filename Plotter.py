@@ -45,7 +45,7 @@ class Plotter(BGS, EmceeRun):
     @staticmethod
     def plot_emcee_corner(flat_samples, labels):
         fig = corner.corner(flat_samples, labels=labels, quantiles=(0.16, 0.50, 0.84), show_titles=True);
-        plt.show()
+        # plt.show()
 
     @staticmethod
     def plot_vmax_hist(h, b, _h, _b, **plot_params):
