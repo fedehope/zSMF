@@ -13,8 +13,8 @@ class HST(Data):
         self.cosmo = FlatLambdaCDM(H0=67.8, Om0=0.307)
 
         hst_all = self.get_data()
-        self.z = hst_all['ZPDF'].data
-        self.x = hst_all['MASS_MED'].data
+        self.z = hst_all['z_peak'].data
+        self.x = hst_all['lmass'].data
         self.vmax = None
 
     def select_galaxies(self, zmin, zmax):
