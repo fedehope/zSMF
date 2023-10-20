@@ -45,10 +45,15 @@ class HST(Data):
         else:
             return f(mstar)
 
-    def set_vmax(self):
+    def set_vmax(self, x):
         dmin3 = self.cosmo.comoving_distance(0.65).value ** 3
         self.vmax = np.array([4 * np.pi / 3 * self.footprint / self.sky * (
-                self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in self.x])
+                self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in x])
+
+    def get_vmax(self, x):
+        dmin3 = self.cosmo.comoving_distance(0.65).value ** 3
+        return np.array([4 * np.pi / 3 * self.footprint / self.sky * (
+                self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in x])
 
     def get_number_galaxies(self, bin=False, zmin=None, zmax=None):
         if self.z.shape[0] == self.x.shape[0] and bin==False:
