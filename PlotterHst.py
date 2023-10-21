@@ -14,8 +14,9 @@ class PlotterHst(HST, EmceeRun):
         HST.__init__(self, hst.file)
         self.samples = emcee_run.samples
         self.labels4 = emcee_run.labels4
+        self.labels2 = emcee_run.labels2
         self.flat_samples = None
-        self.z_lin = np.linspace(0.65, 3.0, 100)
+        self.z_lin = np.linspace(0.5, 3.0, 100)
 
     def plot_selected_data(self, zmin, zmax):
         z, x = self.select_galaxies(zmin, zmax)
@@ -26,12 +27,25 @@ class PlotterHst(HST, EmceeRun):
 
         plt.legend(loc='lower right', fontsize=10, markerscale=10, handletextpad=0.1)
         plt.xlabel(r"redshift ($z$)")
-        plt.xlim(0.6, 3.5)
+        plt.xlim(0.45, 3.5)
         plt.ylabel(r"$\log M_*$")
         plt.ylim(6., 14.)
 
     def plot_emcee_samples(self):
         ndim = len(self.labels4)
+
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels4[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
+
+
+    def plot_emcee_samples2(self):
+        ndim = len(self.labels2)
 
         fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
         for i in range(ndim):

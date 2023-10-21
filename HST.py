@@ -29,15 +29,15 @@ class HST(Data):
 
     def mass_completeness_limit(self, z):
 
-        x_values = [0.65, 1.0, 1.5, 2.1, 3.0]
-        y_values = [8.72, 9.07, 9.63, 9.79, 10.15]
+        x_values = [0.5, 0.65, 1.0, 1.5, 2.1, 3.0]
+        y_values = [8.72, 8.72, 9.07, 9.63, 9.79, 10.15]
 
         f = interp1d(x_values, y_values)
         return f(z)
 
     def zmax_lim(self, mstar):
-        y_values = [8.72, 9.07, 9.63, 9.79, 10.15]
-        x_values = [0.65, 1.0, 1.5, 2.1, 3.0]
+        y_values = [8.72, 8.72, 9.07, 9.63, 9.79, 10.15]
+        x_values = [0.5, 0.65, 1.0, 1.5, 2.1, 3.0]
 
         f = interp1d(y_values, x_values)
         if mstar > y_values[-1]:
