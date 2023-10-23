@@ -2,6 +2,7 @@ import corner
 import numpy as np
 from EmceeRun import EmceeRun
 from HST import HST
+from NoZSchechterModel import NoZSchechterModel
 from ZSchechterModel import ZSchechterModel
 
 # -- plotting --
@@ -15,6 +16,7 @@ class PlotterHst(HST, EmceeRun):
         self.samples = emcee_run.samples
         self.labels4 = emcee_run.labels4
         self.labels2 = emcee_run.labels2
+        self.labels3 = emcee_run.labels3
         self.flat_samples = None
         self.z_lin = np.linspace(0.5, 3.0, 100)
 
@@ -43,7 +45,6 @@ class PlotterHst(HST, EmceeRun):
             ax.yaxis.set_label_coords(-0.1, 0.5)
             axes[-1].set_xlabel("step number")
 
-
     def plot_emcee_samples2(self):
         ndim = len(self.labels2)
 
@@ -53,6 +54,18 @@ class PlotterHst(HST, EmceeRun):
             ax.plot(self.samples[:, :, i], "k", alpha=0.3)
             ax.set_xlim(0, len(self.samples))
             ax.set_ylabel(self.labels4[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
+
+    def plot_emcee_samples3(self):
+        ndim = len(self.labels3)
+
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels3[i])
             ax.yaxis.set_label_coords(-0.1, 0.5)
             axes[-1].set_xlabel("step number")
 
@@ -80,6 +93,19 @@ class PlotterHst(HST, EmceeRun):
 
         plt.yscale('log')
         plt.ylim(1e-5, 4e-2)
+        plt.xlim(7, 13)
+
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+
+    @staticmethod
+    def plot_NoZschechter(x, best_params, **plot_params):
+        logM, alpha1 = best_params
+        nozschechter = NoZSchechterModel.phi(x, logM, alpha1)
+        plt.plot(x, nozschechter, **plot_params)
+
+        plt.yscale('log')
+        plt.ylim(1e-5, 4e2)
         plt.xlim(7, 13)
 
         plt.xlabel(r'$\log M_*$', fontsize=15)
