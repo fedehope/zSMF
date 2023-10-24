@@ -1,5 +1,5 @@
 import numpy as np
-from astropy.cosmology import FlatLambdaCDM
+from astropy.cosmology import FlatLambdaCDM, Planck13
 from scipy.interpolate import interp1d
 
 from Data import Data
@@ -48,7 +48,12 @@ class HST(Data):
     def set_vmax(self, x):
         dmin3 = self.cosmo.comoving_distance(0.65).value ** 3
         self.vmax = np.array([4 * np.pi / 3 * self.footprint / self.sky * (
-                self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in x])
+                self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in x]) * Planck13.h ** 3
+
+        # v_zmin = Planck13.comoving_volume(0.5).value * Planck13.h ** 3 * self.footprint / self.sky  # (Mpc/h)^3
+        # # v_zmax = Planck13.comoving_volume(zmax).value * Planck13.h ** 3 * self.footprint / self.sky  # (Mpc/h)^3
+        # self.vmax = np.array([Planck13.comoving_volume(self.zmax_lim(m_i)).value * Planck13.h ** 3 * self.footprint / self.sky - v_zmin for m_i in x])
+
 
     def get_vmax(self, x):
         dmin3 = self.cosmo.comoving_distance(0.65).value ** 3

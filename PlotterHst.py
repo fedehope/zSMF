@@ -17,6 +17,7 @@ class PlotterHst(HST, EmceeRun):
         self.labels4 = emcee_run.labels4
         self.labels2 = emcee_run.labels2
         self.labels3 = emcee_run.labels3
+        self.labels6 = emcee_run.labels6
         self.flat_samples = None
         self.z_lin = np.linspace(0.5, 3.0, 100)
 
@@ -69,6 +70,19 @@ class PlotterHst(HST, EmceeRun):
             ax.yaxis.set_label_coords(-0.1, 0.5)
             axes[-1].set_xlabel("step number")
 
+
+    def plot_emcee_samplesZ(self):
+        ndim = len(self.labels6)
+
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels6[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
+
     @staticmethod
     def plot_emcee_corner(flat_samples, labels):
         fig = corner.corner(flat_samples, labels=labels, quantiles=(0.16, 0.50, 0.84), show_titles=True);
@@ -99,9 +113,35 @@ class PlotterHst(HST, EmceeRun):
         plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
 
     @staticmethod
+    def plot_zschechter_double(x, z0, norm, best_params, **plot_params):
+        a0, a1, a2, a3, a4, a5, a6 = best_params
+        zschechter = ZSchechterModel.phi_double_hst(x, z0, a0, a1, a2, a3, a4, a5, a6)
+        plt.plot(x, norm * zschechter, **plot_params)
+
+        plt.yscale('log')
+        # plt.ylim(1e-5, 4e-2)
+        plt.xlim(7, 13)
+
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+
+    @staticmethod
     def plot_NoZschechter(x, best_params, **plot_params):
         logM, alpha1 = best_params
         nozschechter = NoZSchechterModel.phi(x, logM, alpha1)
+        plt.plot(x, nozschechter, **plot_params)
+
+        plt.yscale('log')
+        plt.ylim(1e-5, 4e2)
+        plt.xlim(7, 13)
+
+        plt.xlabel(r'$\log M_*$', fontsize=15)
+        plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]', fontsize=15)
+
+    @staticmethod
+    def plot_NoZschechter_double(x, best_params, **plot_params):
+        logM, alpha1, alpha2 = best_params
+        nozschechter = NoZSchechterModel.phi_double(x, logM, alpha1, alpha2)
         plt.plot(x, nozschechter, **plot_params)
 
         plt.yscale('log')

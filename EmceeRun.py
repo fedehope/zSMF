@@ -18,6 +18,7 @@ class EmceeRun(Fileh5):
         self.labels4 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$a_{3}$']
         self.labels2 = [r'$\log(M_{*})$', r'$\alpha_{1}$']
         self.labels3 = [r'$\log(M_{*})$', r'$\alpha_{1}$', r'$\alpha_{2}$']
+        self.labels6 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$a_{3}$', r'$a_{4}$', r'$a_{5}$', r'$a_{6}$']
 
     def set_best_params(self, discard):
         self.flat_samples = self.reader.get_chain(discard=discard, thin=15, flat=True)

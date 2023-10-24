@@ -19,6 +19,13 @@ class NoZSchechterModel(BGS):
         term1 = 10 ** ((alpha1 + 1) * (x - logM))
         return term0 * term1
 
+    @staticmethod
+    def phi_double(x, logM, alpha1, alpha2):
+        term0 = np.log(10) * np.exp(-10 ** (x - logM))
+        term1 = 10 ** ((alpha1 + 1) * (x - logM))
+        term2 = 10 ** ((alpha2 + 1) * (x - logM))
+        return term0 * (term1 + term2)
+
     def integral_phi(self, logM, alpha1):
         return np.array([integrate.quad(NoZSchechterModel.phi, self.mlim[i], 13., args=(logM, alpha1))[0] for i in
                          range(len(self.mlim))])

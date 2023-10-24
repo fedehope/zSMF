@@ -25,6 +25,17 @@ class ZSchechterModel(BGS):
         return term0 * term1
 
     @staticmethod
+    def phi_double_hst(x, z, a0, a1, a2, a3, a4, a5, a6):
+        logM = a0 * z **2 + a1*z + a2
+        alpha1 = a3*z + a4
+        alpha2 = a5 * z + a6
+
+        term0 = np.exp(-10 ** (x - logM))
+        term1 = 10 ** ((alpha1 + 1) * (x - logM))
+        term2 = 10 ** ((alpha2 + 1) * (x - logM))
+        return term0 * (term1 + term2)
+
+    @staticmethod
     def phi_vectorised(x, z, a0, a1, a2, a3):
         logM = a0 + a1 * z
         alpha1 = a2 + a3 * z
