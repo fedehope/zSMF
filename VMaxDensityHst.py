@@ -14,11 +14,14 @@ class VmaxDensityHst(HST):
         z, x = self.select_galaxies(zmin, zmax)
         self.set_vmax(x)
         vmax = self.vmax
-        weights = (1. / vmax)
-        hist, bin_edges = np.histogram(x, bins=bins, range=range, weights=weights)
 
         v_zmax = 4 * np.pi / 3 * self.footprint / self.sky * (self.cosmo.comoving_distance(zmax).value ** 3)
         v_zmin = 4 * np.pi / 3 * self.footprint / self.sky * (self.cosmo.comoving_distance(zmin).value ** 3)
+
+        weights = (1. / vmax)
+        hist, bin_edges = np.histogram(x, bins=bins, range=range, weights=weights)
+
+
 
         # mask = (self.z > zmin) & (self.z < zmax)
         # _w = 1. / (self.get_vmax(self.x).clip(v_zmin, v_zmax) - v_zmin)

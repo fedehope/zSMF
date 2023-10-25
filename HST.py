@@ -46,7 +46,7 @@ class HST(Data):
             return f(mstar)
 
     def set_vmax(self, x):
-        dmin3 = self.cosmo.comoving_distance(0.65).value ** 3
+        dmin3 = self.cosmo.comoving_distance(0.5).value ** 3
         self.vmax = np.array([4 * np.pi / 3 * self.footprint / self.sky * (
                 self.cosmo.comoving_distance(self.zmax_lim(m_i)).value ** 3 - dmin3) for m_i in x]) * Planck13.h ** 3
 
