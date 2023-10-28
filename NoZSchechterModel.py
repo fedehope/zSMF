@@ -20,6 +20,13 @@ class NoZSchechterModel(BGS):
         return term0 * term1
 
     @staticmethod
+    def phi(x, logM, alpha1, alpha2, logPhi2Phi1):
+        term0 = np.log(10) * np.exp(-10 ** (x - logM))
+        term1 = 10 ** ((alpha1 + 1) * (x - logM))
+        term2 = 10 ** ((alpha2 + 1) * (x - logM) + logPhi2Phi1)
+        return term0 * (term1 + term2)
+
+    @staticmethod
     def phi_double(x, logM, alpha1, alpha2):
         term0 = np.log(10) * np.exp(-10 ** (x - logM))
         term1 = 10 ** ((alpha1 + 1) * (x - logM))
