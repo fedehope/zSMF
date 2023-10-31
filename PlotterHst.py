@@ -18,6 +18,7 @@ class PlotterHst(HST, EmceeRun):
         self.labels2 = emcee_run.labels2
         self.labels3 = emcee_run.labels3
         self.labels6 = emcee_run.labels6
+        self.labels8 = emcee_run.labels8
         self.flat_samples = None
         self.z_lin = np.linspace(0.5, 3.0, 100)
 
@@ -67,6 +68,18 @@ class PlotterHst(HST, EmceeRun):
             ax.plot(self.samples[:, :, i], "k", alpha=0.3)
             ax.set_xlim(0, len(self.samples))
             ax.set_ylabel(self.labels3[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
+
+    def plot_emcee_samples8(self):
+        ndim = len(self.labels8)
+
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels8[i])
             ax.yaxis.set_label_coords(-0.1, 0.5)
             axes[-1].set_xlabel("step number")
 
