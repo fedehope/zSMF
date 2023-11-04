@@ -23,7 +23,7 @@ class HST(Data):
 
         z = self.z[mask_zlim]
         x = self.x[mask_zlim]
-        mask_mlim = (x > self.mass_completeness_limit(z))
+        mask_mlim = (x > self.mass_completeness_limit(z)) & (x < 12.)
 
         return z[mask_mlim], x[mask_mlim]
 
