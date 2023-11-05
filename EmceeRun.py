@@ -21,6 +21,8 @@ class EmceeRun(Fileh5):
         self.labels6 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$a_{3}$', r'$a_{4}$', r'$a_{5}$', r'$a_{6}$']
         self.labels8 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$\alpha_{1}$', r'$\alpha_{2}$',
                         r'$a_{7}$', r'$a_{8}$', r'$a_{9}$']
+        self.labels10 = [r'$a_{0}$', r'$a_{1}$', r'$a_{2}$', r'$a_{3}$', r'$a_{4}$', r'$a_{5}$', r'$a_{6}$',
+                         r'$a_{7}$', r'$a_{8}$', r'$a_{9}$']
 
     def set_best_params(self, discard):
         self.flat_samples = self.reader.get_chain(discard=discard, thin=15, flat=True)
@@ -46,4 +48,3 @@ class EmceeRun(Fileh5):
         emcee_run_04.set_best_params(discard=discard)
 
         return np.array([emcee_run_02, emcee_run_03, emcee_run_04])
-
