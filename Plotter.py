@@ -14,6 +14,7 @@ class Plotter(BGS, EmceeRun):
         BGS.__init__(self, bgs.file)
         self.samples = emcee_run.samples
         self.labels4 = emcee_run.labels4
+        self.labels8 = emcee_run.labels8
         self.flat_samples = None
         self.z_lin = np.linspace(0, 0.65, 100)
 
@@ -22,7 +23,7 @@ class Plotter(BGS, EmceeRun):
 
         plt.scatter(self.z, self.x_median, s=1, c='lightgrey', label='BGS Bright')
         plt.scatter(z, x_median, s=1, c='C0', label='BGS Bright Mlim')
-        plt.plot(self.z_lin, self.mass_completeness_limit(self.z_lin), color='orange', linewidth=0.9)
+        plt.plot(self.z_lin, self.mass_completeness_limit_bgs(self.z_lin), color='orange', linewidth=0.9)
 
         plt.legend(loc='lower right', fontsize=10, markerscale=10, handletextpad=0.1)
         plt.xlabel(r"redshift ($z$)")
@@ -39,6 +40,19 @@ class Plotter(BGS, EmceeRun):
             ax.plot(self.samples[:, :, i], "k", alpha=0.3)
             ax.set_xlim(0, len(self.samples))
             ax.set_ylabel(self.labels4[i])
+            ax.yaxis.set_label_coords(-0.1, 0.5)
+            axes[-1].set_xlabel("step number")
+
+
+    def plot_emcee_samples8(self):
+        ndim = len(self.labels8)
+
+        fig, axes = plt.subplots(ndim, figsize=(10, 10), sharex=True)
+        for i in range(ndim):
+            ax = axes[i]
+            ax.plot(self.samples[:, :, i], "k", alpha=0.3)
+            ax.set_xlim(0, len(self.samples))
+            ax.set_ylabel(self.labels8[i])
             ax.yaxis.set_label_coords(-0.1, 0.5)
             axes[-1].set_xlabel("step number")
 
