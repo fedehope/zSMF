@@ -67,7 +67,7 @@ class Plotter(BGS, EmceeRun):
         plt.step(_b[:-1], _h, where='post', color='k', linestyle='--', linewidth=0.8)
         plt.yscale('log')
         plt.ylim(1e-5, 4e-2)
-        plt.xlim(7, 13)
+        plt.xlim(6, 13)
 
         plt.xlabel(r'$\log M_*$')
         plt.ylabel(r'$p(\log M_*)$ [$({\rm Mpc}/h)^{-3}{\rm dex}^{-1}$]')
