@@ -26,6 +26,10 @@ class BGS(Data):
         self.w_spec = self.w_zfail * self.w_fib
         self.vmax = bgs['Vmax'].data
 
+        # For jack knife
+        self.ra = bgs['RA'].data
+        self.dec = bgs['DEC'].data
+
         # Setting attributes for the mass completeness limit parameters
         self.f = -1.34199453
         self.b = 13.90578909
